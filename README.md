@@ -56,7 +56,3 @@ This repository provides tools and scripts to facilitate the migration of issues
 - [jira.js](https://github.com/MrRefactoring/jira.js)
 - [AWS SDK for S3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/)
 - [SQLite](https://www.sqlite.org/index.html)
-
-## License
-
-MIT
