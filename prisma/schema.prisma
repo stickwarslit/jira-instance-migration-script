@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum SourcePriority {
+  LOW
+  LOWEST
+  MEDIUM
+  HIGH
+  HIGHEST
+  TRIVIAL
+  MINOR
+  CRITICAL
+  BLOCKER
+  MAJOR
+}
+
+enum SourceStatus {
+  BACKLOG
+  CANCELLED
+  CODE_MERGED
+  DONE
+  IN_CODE_REVIEW
+  IN_PROGRESS
+  IN_REVIEW
+  OPEN
+  QA_FAILED
+  QA_READY
+  QA_PASSED
+  REJECTED
+  TO_DO
+}
+
+enum SourceIssueType {
+  BUG
+  EPIC
+  STORY
+  TASK
+  SUB_TASK
+}
+
+model SourceIssue {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  summary     String
+  description Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  parentKey   String?
+
+  assigneeId Int?
+  assignee   SourceUser? @relation(name: "AssigneeIssues", fields: [assigneeId], references: [id])
+  reporterId Int?
+  reporter   SourceUser? @relation(name: "ReporterIssues", fields: [reporterId], references: [id])
+
+  status      SourceStatus
+  type        SourceIssueType
+  priority    SourcePriority
+  fixVersions SourceRelease[]         @relation("FixVersions")
+  attachments SourceIssueAttachment[]
+  comments    SourceIssueComment[]
+}
+
+model SourceIssueComment {
+  id           Int     @id @default(autoincrement())
+  jiraId       String  @unique
+  body         Json?
+  targetJiraId String?
+
+  issue    SourceIssue @relation(fields: [issueId], references: [id])
+  issueId  Int
+  author   SourceUser? @relation(name: "CommentAuthor", fields: [authorId], references: [id])
+  authorId Int?
+}
+
+model SourceIssueAttachment {
+  id                Int         @id @default(autoincrement())
+  filename          String?
+  mimeType          String
+  s3Key             String
+  jiraId            String?
+  jiraMediaId       String?
+  targetJiraId      String?
+  targetJiraMediaId String?
+  issue             SourceIssue @relation(fields: [issueId], references: [id])
+  issueId           Int
+}
+
+model SourceRelease {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  description String?
+  issues      SourceIssue[] @relation("FixVersions")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model SourceUser {
+  id                  Int      @id @default(autoincrement())
+  accountId           String   @unique
+  targetJiraAccountId String?
+  email               String?
+  displayName         String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  reportedIssues SourceIssue[]        @relation("ReporterIssues")
+  assignedIssues SourceIssue[]        @relation("AssigneeIssues")
+  comments       SourceIssueComment[] @relation("CommentAuthor")
+}

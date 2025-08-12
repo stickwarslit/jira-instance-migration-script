@@ -1,0 +1,41 @@
+{
+  "scripts": {
+    "test": "tsx src/test.ts",
+    "pull": "tsx src/pull.ts",
+    "push": "tsx src/push.ts"
+  },
+  "lint-staged": {
+    "*.svg": "svgo",
+    "*.prisma": "prisma format --schema",
+    "*": "prettier --ignore-unknown --write"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.863.0",
+    "@eslint/js": "9.32.0",
+    "@prisma/adapter-better-sqlite3": "^6.13.0",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^24.2.0",
+    "dotenv": "^17.2.1",
+    "eslint": "9.32.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "eslint-plugin-unused-imports": "4.1.4",
+    "form-data": "^4.0.4",
+    "globals": "16.3.0",
+    "jira.js": "5.2.2",
+    "jiti": "2.5.1",
+    "lodash": "^4.17.21",
+    "nanoid": "^5.1.5",
+    "prettier": "3.6.2",
+    "prisma": "^6.13.0",
+    "superstruct": "^2.0.2",
+    "tsx": "4.20.3",
+    "type-fest": "^4.41.0",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.39.0"
+  },
+  "dependencies": {
+    "@prisma/client": "6.13.0"
+  }
+}
