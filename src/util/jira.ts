@@ -6,25 +6,37 @@ import FormData from 'form-data';
 import type { Version3Models } from 'jira.js';
 import { Version3Client } from 'jira.js';
 
-const email = process.env.JIRA_USERNAME;
-assert(email, 'JIRA_USERNAME is required');
-const apiToken = process.env.JIRA_API_KEY;
-assert(apiToken, 'JIRA_API_KEY is required');
+const targetJiraEmail = process.env.TARGET_JIRA_EMAIL;
+assert(targetJiraEmail, 'TARGET_JIRA_EMAIL is required');
+const targetJiraApiToken = process.env.TARGET_JIRA_API_TOKEN;
+assert(targetJiraApiToken, 'TARGET_JIRA_API_TOKEN is required');
+const targetJiraHost = process.env.TARGET_JIRA_HOST;
+assert(targetJiraHost, 'TARGET_JIRA_HOST is required');
 
-const authentication = {
-  basic: {
-    email,
-    apiToken,
-  },
-};
+const sourceJiraEmail = process.env.SOURCE_JIRA_EMAIL;
+assert(sourceJiraEmail, 'SOURCE_JIRA_EMAIL is required');
+const sourceJiraApiToken = process.env.SOURCE_JIRA_API_TOKEN;
+assert(sourceJiraApiToken, 'SOURCE_JIRA_API_TOKEN is required');
+const sourceJiraHost = process.env.SOURCE_JIRA_HOST;
+assert(sourceJiraHost, 'SOURCE_JIRA_HOST is required');
 
 export const sourceJiraClient = new Version3Client({
-  host: 'https://source.atlassian.net',
-  authentication,
+  host: sourceJiraHost,
+  authentication: {
+    basic: {
+      email: sourceJiraEmail,
+      apiToken: sourceJiraApiToken,
+    },
+  },
 });
 export const targetJiraClient = new Version3Client({
-  host: 'https://targetsupport.atlassian.net',
-  authentication,
+  host: targetJiraHost,
+  authentication: {
+    basic: {
+      email: targetJiraEmail,
+      apiToken: targetJiraApiToken,
+    },
+  },
 });
 
 export interface UploadAttachmentsToTargetJiraParams {
